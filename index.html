@@ -11,37 +11,82 @@
 <body>
     <header>
         <h1>PWA App Store</h1>
+        <nav>
+            <button id="addAppBtn" class="nav-btn active">Add App</button>
+            <button id="linkPwaBtn" class="nav-btn">Link PWA</button>
+        </nav>
     </header>
     
     <main>
-        <section class="upload-form">
+        <!-- Upload App Form -->
+        <section id="uploadSection" class="upload-form">
             <h2>Add New App</h2>
             <div class="form-group">
                 <label for="appName">App Name</label>
                 <input type="text" id="appName" placeholder="Enter app name">
             </div>
             
+            <div class="form-group">
+                <label for="appDescription">Description (optional)</label>
+                <textarea id="appDescription" placeholder="Enter app description"></textarea>
+            </div>
+            
             <div class="file-upload-container" id="dropZone">
                 <p>Drag and drop files here or</p>
-                <input type="file" id="fileInput" accept=".html,.js,.css" multiple>
+                <input type="file" id="fileInput" accept=".html,.js,.css,.json,.png,.jpg,.ico" multiple>
                 <button id="uploadBtn">Upload Files</button>
+            </div>
+            
+            <div class="upload-preview">
+                <h3>Files to upload:</h3>
+                <ul id="fileList"></ul>
             </div>
         </section>
 
-        <section class="app-grid" id="appGrid">
-            <!-- Apps will be dynamically added here -->
+        <!-- Link PWA Form -->
+        <section id="linkSection" class="upload-form" style="display: none;">
+            <h2>Link Existing PWA</h2>
+            <div class="form-group">
+                <label for="pwaUrl">PWA URL</label>
+                <input type="url" id="pwaUrl" placeholder="https://example.com">
+            </div>
+            <button id="verifyPwaBtn">Verify & Link PWA</button>
+            <div id="pwaVerificationStatus" class="verification-status"></div>
+        </section>
+
+        <!-- App Grid -->
+        <section class="app-categories">
+            <div class="category-tabs">
+                <button class="category-tab active" data-category="all">All Apps</button>
+                <button class="category-tab" data-category="uploaded">Uploaded</button>
+                <button class="category-tab" data-category="linked">Linked PWAs</button>
+            </div>
+            <div class="app-grid" id="appGrid">
+                <!-- Apps will be dynamically added here -->
+            </div>
         </section>
     </main>
 
+    <!-- App Viewer Modal -->
     <div class="modal-viewer" id="appViewer">
         <div class="modal-header">
-            <h2 id="viewerTitle">App Viewer</h2>
-            <button class="close-btn" id="closeViewer">&times;</button>
+            <div class="viewer-header-content">
+                <h2 id="viewerTitle">App Viewer</h2>
+                <span id="viewerUrl" class="viewer-url"></span>
+            </div>
+            <div class="viewer-controls">
+                <button id="refreshViewer" class="icon-btn" title="Refresh">↻</button>
+                <button id="openExternal" class="icon-btn" title="Open in new window">⎋</button>
+                <button id="closeViewer" class="icon-btn" title="Close">×</button>
+            </div>
         </div>
         <div class="modal-content">
-            <iframe class="viewer-frame" id="viewerFrame" sandbox="allow-scripts allow-same-origin"></iframe>
+            <iframe class="viewer-frame" id="viewerFrame" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
         </div>
     </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
 
     <script src="app.js"></script>
     <script src="sw.js"></script>
