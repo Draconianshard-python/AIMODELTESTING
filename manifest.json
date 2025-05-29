@@ -1,21 +1,110 @@
 {
-    "name": "PWA File Manager",
-    "short_name": "FileManager",
-    "description": "A PWA for managing HTML, JS, and CSS files",
-    "start_url": "/index.html",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#2196f3",
-    "icons": [
+  "name": "PWA App Store",
+  "short_name": "App Store",
+  "description": "A modern PWA App Store for managing web applications",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Add Website",
+      "short_name": "Add Web",
+      "description": "Add a new website to your app store",
+      "url": "/?action=add-website",
+      "icons": [{ "src": "assets/icons/add-website.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Search Apps",
+      "short_name": "Search",
+      "description": "Search your installed apps",
+      "url": "/?action=search",
+      "icons": [{ "src": "assets/icons/search.png", "sizes": "192x192" }]
+    }
+  ],
+  "share_target": {
+    "action": "/?share-target",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
         {
-            "src": "icons/icon-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png"
-        },
-        {
-            "src": "icons/icon-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png"
+          "name": "files",
+          "accept": ["image/*", ".html", ".css", ".js", ".json"]
         }
-    ]
+      ]
+    }
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+app",
+      "url": "/?app=%s"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "categories": ["utilities", "productivity"],
+  "screenshots": [
+    {
+      "src": "assets/screenshots/home.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Homescreen of PWA App Store"
+    }
+  ]
 }
