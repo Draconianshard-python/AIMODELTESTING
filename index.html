@@ -3,169 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Store</title>
+    <title>PWA App Store</title>
+    <meta name="theme-color" content="#1c1c1e">
     <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="ios-style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
-<body class="ios-theme">
-    <div class="ios-status-bar">
-        <img src="assets/status-bar.png" alt="Status Bar">
-    </div>
-    
+<body>
+    <div class="status-bar"></div>
     <header class="ios-header">
-        <div class="header-content">
-            <div class="user-profile">
-                <img src="assets/default-avatar.png" alt="Profile" id="profileImage">
-            </div>
-            <div class="header-title">
-                <span class="greeting">Welcome,</span>
-                <h1>App Store</h1>
-            </div>
-            <div class="account-info" id="accountInfo">
-                <i class="fas fa-user-circle"></i>
-            </div>
+        <img src="assets/app-store.png" class="logo" alt="App Store Logo">
+        <div class="search-bar">
+            <i class="fa fa-search"></i>
+            <input type="search" placeholder="Search apps, games, sites..." id="searchInput" autocomplete="off">
         </div>
+        <button class="install-btn" id="installPWA" title="Install App Store">
+            <i class="fa fa-download"></i>
+        </button>
     </header>
-    
-    <main class="ios-main">
-        <!-- Featured Section -->
-        <section class="featured-section" id="featuredSection">
-            <div class="section-header">
-                <h2>Featured</h2>
-                <a href="#" class="see-all">See All</a>
-            </div>
-            <div class="featured-carousel">
-                <div class="featured-card">
-                    <img src="assets/featured-app-1.png" alt="Featured App" class="featured-image">
-                    <div class="featured-content">
-                        <span class="featured-tag">FEATURED</span>
-                        <h3>Amazing App</h3>
-                        <p>Discover something spectacular</p>
-                        <button class="get-button">GET</button>
-                    </div>
-                </div>
-                <!-- More featured cards -->
-            </div>
+
+    <main class="main-content" id="mainContent">
+        <!-- Featured Carousel -->
+        <section class="featured-carousel" id="featuredCarousel">
+            <!-- Dynamically inserted featured cards -->
         </section>
 
-        <!-- Categories Section -->
-        <section class="categories-section">
-            <div class="section-header">
-                <h2>Categories</h2>
-            </div>
-            <div class="category-grid">
-                <div class="category-item">
-                    <div class="category-icon" style="background: linear-gradient(135deg, #FF6B6B, #FF8E8E);">
-                        <i class="fas fa-gamepad"></i>
-                    </div>
-                    <span>Games</span>
-                </div>
-                <div class="category-item">
-                    <div class="category-icon" style="background: linear-gradient(135deg, #4ECDC4, #45B7AF);">
-                        <i class="fas fa-code"></i>
-                    </div>
-                    <span>Developer</span>
-                </div>
-                <!-- More categories -->
-            </div>
-        </section>
+        <!-- Categories -->
+        <nav class="categories-nav" id="categoriesNav">
+            <!-- Categories inserted here -->
+        </nav>
 
-        <!-- Apps Grid -->
+        <!-- App Grid -->
         <section class="apps-section">
-            <div class="section-header">
-                <h2>Your Apps</h2>
-                <div class="view-options">
-                    <button class="view-option active" data-view="grid">
-                        <i class="fas fa-th-large"></i>
-                    </button>
-                    <button class="view-option" data-view="list">
-                        <i class="fas fa-list"></i>
-                    </button>
-                </div>
+            <div class="apps-header">
+                <span>All Apps</span>
+                <button class="fab" id="openAddModal" title="Add App">
+                    <i class="fa fa-plus"></i>
+                </button>
             </div>
             <div class="apps-grid" id="appsGrid">
-                <!-- Apps will be dynamically added here -->
+                <!-- App icons inserted here -->
             </div>
         </section>
     </main>
 
-    <!-- Bottom Navigation -->
-    <nav class="ios-nav">
-        <button class="nav-btn active" data-view="today">
-            <i class="fas fa-star"></i>
-            <span>Today</span>
-        </button>
-        <button class="nav-btn" data-view="games">
-            <i class="fas fa-gamepad"></i>
-            <span>Games</span>
-        </button>
-        <button class="nav-btn" data-view="apps">
-            <i class="fas fa-th-large"></i>
-            <span>Apps</span>
-        </button>
-        <button class="nav-btn" data-view="search">
-            <i class="fas fa-search"></i>
-            <span>Search</span>
-        </button>
-        <button class="nav-btn" data-view="updates">
-            <i class="fas fa-arrow-down"></i>
-            <span>Updates</span>
-        </button>
-    </nav>
-
-    <!-- Add App FAB -->
-    <button class="fab" id="addAppFab">
-        <i class="fas fa-plus"></i>
-    </button>
-
-    <!-- Add App Modal -->
-    <div class="ios-modal" id="addAppModal">
+    <!-- App Detail Modal -->
+    <div class="modal-overlay" id="appDetailModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Add New</h3>
-                <button class="close-modal">
-                    <i class="fas fa-times"></i>
-                </button>
+                <img id="modalAppIcon" src="" class="modal-app-icon" alt="App Icon">
+                <div>
+                    <h2 id="modalAppTitle"></h2>
+                    <div class="modal-badges" id="modalBadges"></div>
+                </div>
+                <button class="close-modal" id="closeDetailModal">&times;</button>
             </div>
-            <div class="modal-options">
-                <button class="modal-option" id="addWebsite">
-                    <div class="option-icon" style="background: linear-gradient(135deg, #FF6B6B, #FF8E8E);">
-                        <i class="fas fa-globe"></i>
-                    </div>
-                    <div class="option-text">
-                        <h4>Add Website</h4>
-                        <p>Add any website as an app</p>
-                    </div>
-                </button>
-                <button class="modal-option" id="uploadApp">
-                    <div class="option-icon" style="background: linear-gradient(135deg, #4ECDC4, #45B7AF);">
-                        <i class="fas fa-upload"></i>
-                    </div>
-                    <div class="option-text">
-                        <h4>Upload App</h4>
-                        <p>Upload your own PWA</p>
-                    </div>
-                </button>
-                <button class="modal-option" id="linkPwa">
-                    <div class="option-icon" style="background: linear-gradient(135deg, #A8E6CF, #90D4B6);">
-                        <i class="fas fa-link"></i>
-                    </div>
-                    <div class="option-text">
-                        <h4>Link PWA</h4>
-                        <p>Add existing PWA</p>
-                    </div>
-                </button>
+            <div class="modal-body">
+                <div class="modal-screenshots" id="modalScreenshots"></div>
+                <p id="modalAppDesc"></p>
+                <div class="modal-links">
+                    <button class="modal-launch" id="launchAppBtn"><i class="fa fa-play"></i> Open</button>
+                    <button class="modal-star" id="favoriteAppBtn"><i class="fa fa-star"></i></button>
+                </div>
+                <div id="modalReviews"></div>
             </div>
         </div>
     </div>
 
-    <!-- Toast Container -->
-    <div id="toastContainer" class="toast-container"></div>
+    <!-- Add App/Website Modal -->
+    <div class="modal-overlay" id="addAppModal">
+        <div class="modal-content modal-add">
+            <div class="modal-header">
+                <h2>Add New App / Website</h2>
+                <button class="close-modal" id="closeAddModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="tabs">
+                    <button class="tab active" data-tab="website">Website</button>
+                    <button class="tab" data-tab="upload">Upload PWA</button>
+                    <button class="tab" data-tab="link">Link PWA</button>
+                </div>
+                <div class="tab-content" id="websiteTab">
+                    <input type="url" id="addWebsiteUrl" placeholder="https://example.com">
+                    <input type="text" id="addWebsiteName" placeholder="Display Name (optional)">
+                    <div class="icon-preview">
+                        <img id="websiteIconPreview" src="assets/default-icon.png" alt="Icon Preview">
+                        <span id="websiteIconStatus"></span>
+                    </div>
+                    <button id="addWebsiteBtn" class="modal-action">Add Website</button>
+                </div>
+                <div class="tab-content" id="uploadTab" style="display:none">
+                    <input type="text" id="uploadAppName" placeholder="App Name">
+                    <input type="file" id="uploadFiles" accept=".html,.js,.css,.json,.png,.jpg,.ico" multiple>
+                    <div id="uploadFileList"></div>
+                    <button id="uploadAppBtn" class="modal-action">Upload PWA</button>
+                </div>
+                <div class="tab-content" id="linkTab" style="display:none">
+                    <input type="url" id="linkPwaUrl" placeholder="https://your-pwa.com">
+                    <button id="linkPwaBtn" class="modal-action">Link PWA</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <script src="config.js"></script>
+    <!-- Fullscreen App Viewer -->
+    <div class="fullscreen-overlay" id="fullscreenOverlay">
+        <div class="fullscreen-header">
+            <span id="fullscreenTitle"></span>
+            <button id="exitFullscreen"><i class="fa fa-times"></i></button>
+        </div>
+        <iframe id="appFrame" allowfullscreen></iframe>
+    </div>
+
+    <!-- Toasts -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Offline Indicator -->
+    <div class="offline-indicator" id="offlineIndicator">
+        <i class="fa fa-wifi-slash"></i> Offline
+    </div>
+
     <script src="utils.js"></script>
     <script src="storage.js"></script>
     <script src="ui.js"></script>
