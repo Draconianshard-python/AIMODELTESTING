@@ -3,146 +3,234 @@ class AppStoreUI {
         this.storage = storageManager;
         this.fullscreen = new FullscreenManager();
         this.initializeUI();
-        this.bindEventListeners();
+        this.setupAnimations();
     }
 
     initializeUI() {
         this.elements = {
-            // Modals
-            addWebsiteModal: document.getElementById('addWebsiteModal'),
-            uploadAppModal: document.getElementById('uploadAppModal'),
-            linkPwaModal: document.getElementById('linkPwaModal'),
-            
-            // Forms
-            websiteUrl: document.getElementById('websiteUrl'),
-            websiteName: document.getElementById('websiteName'),
-            websiteIconPreview: document.getElementById('websiteIconPreview'),
-            
-            // Buttons
-            addWebsiteBtn: document.getElementById('addWebsiteBtn'),
-            uploadAppBtn: document.getElementById('uploadAppBtn'),
-            linkPwaBtn: document.getElementById('linkPwaBtn'),
-            
-            // Containers
+            addAppFab: document.getElementById('addAppFab'),
+            addAppModal: document.getElementById('addAppModal'),
+            featuredCarousel: document.querySelector('.featured-carousel'),
             appsGrid: document.getElementById('appsGrid'),
-            searchResults: document.getElementById('searchResults'),
-            todayView: document.getElementById('todayView'),
-            
-            // Search
-            searchInput: document.getElementById('searchInput')
+            navButtons: document.querySelectorAll('.nav-btn'),
+            viewOptions: document.querySelectorAll('.view-option'),
         };
 
-        // Initialize views
-        this.loadTodayView();
+        this.setupEventListeners();
+        this.loadInitialContent();
     }
 
-    bindEventListeners() {
-        // Website URL input handler
-        if (this.elements.websiteUrl) {
-            this.elements.websiteUrl.addEventListener('input', 
-                UIUtils.debounce(async (e) => {
-                    const url = e.target.value.trim();
-                    if (this.isValidUrl(url)) {
-                        await this.previewWebsite(url);
-                    }
-                }, 500)
-            );
-        }
-
-        // Search input handler
-        if (this.elements.searchInput) {
-            this.elements.searchInput.addEventListener('input',
-                UIUtils.debounce((e) => this.handleSearch(e.target.value), 300)
-            );
-        }
-
-        // Modal close handlers
-        document.querySelectorAll('.ios-modal').forEach(modal => {
-            const closeBtn = modal.querySelector('.close-modal');
-            if (closeBtn) {
-                closeBtn.addEventListener('click', () => {
-                    modal.style.display = 'none';
-                });
-            }
-
-            // Close modal when clicking outside
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.style.display = 'none';
+    setupAnimations() {
+        // Intersection Observer for fade-in animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
                 }
+            });
+        }, { threshold: 0.1 });
+
+        // Observe all animatable elements
+        document.querySelectorAll('.featured-card, .category-item, .app-item').forEach(el => {
+            observer.observe(el);
+        });
+    }
+
+    setupEventListeners() {
+        // FAB handler
+        this.elements.addAppFab?.addEventListener('click', () => {
+            this.showAddAppModal();
+        });
+
+        // Modal close handler
+        document.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.hideModals();
             });
         });
 
-        // Add website form submission
-        const addWebsiteForm = document.querySelector('#addWebsiteModal form');
-        if (addWebsiteForm) {
-            addWebsiteForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                await this.handleAddWebsite();
+        // Navigation handlers
+        this.elements.navButtons?.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                this.handleNavigation(e.currentTarget.dataset.view);
             });
+        });
+
+        // View option handlers
+        this.elements.viewOptions?.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                this.handleViewChange(e.currentTarget.dataset.view);
+            });
+        });
+
+        // Featured carousel touch handling
+        if (this.elements.featuredCarousel) {
+            this.setupCarousel();
         }
     }
 
-    // Modal show/hide methods
-    showAddWebsiteModal() {
-        if (this.elements.addWebsiteModal) {
-            this.elements.addWebsiteModal.style.display = 'block';
-        }
+    setupCarousel() {
+        let startX;
+        let scrollLeft;
+
+        this.elements.featuredCarousel.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].pageX - this.elements.featuredCarousel.offsetLeft;
+            scrollLeft = this.elements.featuredCarousel.scrollLeft;
+        });
+
+        this.elements.featuredCarousel.addEventListener('touchmove', (e) => {
+            if (!startX) return;
+            const x = e.touches[0].pageX - this.elements.featuredCarousel.offsetLeft;
+            const walk = (x - startX) * 2;
+            this.elements.featuredCarousel.scrollLeft = scrollLeft - walk;
+        });
+
+        this.elements.featuredCarousel.addEventListener('touchend', () => {
+            startX = null;
+        });
     }
 
-    showUploadAppModal() {
-        if (this.elements.uploadAppModal) {
-            this.elements.uploadAppModal.style.display = 'block';
-        }
-    }
-
-    showLinkPwaModal() {
-        if (this.elements.linkPwaModal) {
-            this.elements.linkPwaModal.style.display = 'block';
-        }
-    }
-
-    // View loading methods
-    async loadTodayView() {
-        if (this.elements.todayView) {
-            const apps = await this.storage.getAllApps();
-            const featuredApp = Object.values(apps)[0]; // Get the first app for featured
-            
-            if (featuredApp) {
-                const featuredCard = this.elements.todayView.querySelector('.featured-card');
-                if (featuredCard) {
-                    featuredCard.innerHTML = this.createFeaturedCardContent(featuredApp);
-                }
-            }
-        }
-    }
-
-    async loadAppsView() {
+    async loadInitialContent() {
+        await this.loadFeaturedApps();
         await this.loadApps();
+        this.setupCategories();
     }
 
-    loadSearchView() {
-        if (this.elements.searchInput) {
-            this.elements.searchInput.focus();
+    async loadFeaturedApps() {
+        const apps = await this.storage.getAllApps();
+        const featuredApps = Object.values(apps).slice(0, 3);
+
+        if (this.elements.featuredCarousel) {
+            this.elements.featuredCarousel.innerHTML = featuredApps.map(app => this.createFeaturedCard(app)).join('');
         }
     }
 
-    // UI Helper methods
-    createFeaturedCardContent(app) {
+    createFeaturedCard(app) {
         return `
-            <div class="card-header">
-                <span class="featured-label">FEATURED APP</span>
-                <button class="get-btn" onclick="event.stopPropagation(); window.open('${app.url}', '_blank')">
-                    OPEN
-                </button>
-            </div>
-            <div class="card-content">
-                <img src="${app.icon || 'default-icon.png'}" alt="${app.name}" class="featured-icon">
-                <h3>${app.name}</h3>
-                <p>${app.description || ''}</p>
+            <div class="featured-card">
+                <img src="${app.icon || 'assets/icons/default-icon.png'}" alt="${app.name}" class="featured-image">
+                <div class="featured-content">
+                    <span class="featured-tag">FEATURED</span>
+                    <h3>${app.name}</h3>
+                    <p>${app.description || 'No description available'}</p>
+                    <button class="get-button" onclick="appStoreUI.launchApp('${app.id}')">
+                        GET
+                    </button>
+                </div>
             </div>
         `;
     }
 
-    // Add more helper methods as needed...
+    setupCategories() {
+        const categories = [
+            { name: 'Games', icon: 'gamepad', color: '#FF6B6B' },
+            { name: 'Developer', icon: 'code', color: '#4ECDC4' },
+            { name: 'Productivity', icon: 'briefcase', color: '#A8E6CF' },
+            { name: 'Education', icon: 'graduation-cap', color: '#FFD93D' },
+            { name: 'Entertainment', icon: 'film', color: '#FF8B94' },
+            { name: 'Social', icon: 'users', color: '#6C5CE7' }
+        ];
+
+        const categoryGrid = document.querySelector('.category-grid');
+        if (categoryGrid) {
+            categoryGrid.innerHTML = categories.map(category => this.createCategoryItem(category)).join('');
+        }
+    }
+
+    createCategoryItem(category) {
+        return `
+            <div class="category-item">
+                <div class="category-icon" style="background: linear-gradient(135deg, ${category.color}, ${this.adjustColor(category.color, -20)});">
+                    <i class="fas fa-${category.icon}"></i>
+                </div>
+                <span>${category.name}</span>
+            </div>
+        `;
+    }
+
+    adjustColor(color, amount) {
+        const hex = color.replace('#', '');
+        const num = parseInt(hex, 16);
+        const r = Math.min(255, Math.max(0, (num >> 16) + amount));
+        const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + amount));
+        const b = Math.min(255, Math.max(0, (num & 0x0000FF) + amount));
+        return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+    }
+
+    showAddAppModal() {
+        if (this.elements.addAppModal) {
+            this.elements.addAppModal.style.display = 'block';
+            this.elements.addAppModal.querySelector('.modal-content').classList.add('slide-up');
+        }
+    }
+
+    hideModals() {
+        document.querySelectorAll('.ios-modal').forEach(modal => {
+            modal.style.display = 'none';
+        });
+    }
+
+    handleNavigation(view) {
+        this.elements.navButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.view === view);
+        });
+
+        // Handle view change
+        this.switchView(view);
+    }
+
+    handleViewChange(viewMode) {
+        this.elements.viewOptions.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.view === viewMode);
+        });
+
+        if (this.elements.appsGrid) {
+            this.elements.appsGrid.className = `apps-grid ${viewMode}-view`;
+        }
+    }
+
+    switchView(view) {
+        // Implement view switching logic
+        const views = ['today', 'games', 'apps', 'search', 'updates'];
+        views.forEach(v => {
+            const section = document.getElementById(`${v}View`);
+            if (section) {
+                section.style.display = v === view ? 'block' : 'none';
+            }
+        });
+
+        // Load view-specific content
+        switch(view) {
+            case 'today':
+                this.loadFeaturedApps();
+                break;
+            case 'apps':
+                this.loadApps();
+                break;
+            case 'search':
+                this.focusSearch();
+                break;
+        }
+    }
+
+    focusSearch() {
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.focus();
+        }
+    }
+
+    showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        
+        const container = document.getElementById('toastContainer');
+        if (container) {
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+    }
 }
