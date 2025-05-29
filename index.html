@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA App Store</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <meta name="theme-color" content="#2196f3">
+</head>
+<body>
+    <header>
+        <h1>PWA App Store</h1>
+    </header>
+    
+    <main>
+        <section class="upload-form">
+            <h2>Add New App</h2>
+            <div class="form-group">
+                <label for="appName">App Name</label>
+                <input type="text" id="appName" placeholder="Enter app name">
+            </div>
+            
+            <div class="file-upload-container" id="dropZone">
+                <p>Drag and drop files here or</p>
+                <input type="file" id="fileInput" accept=".html,.js,.css" multiple>
+                <button id="uploadBtn">Upload Files</button>
+            </div>
+        </section>
+
+        <section class="app-grid" id="appGrid">
+            <!-- Apps will be dynamically added here -->
+        </section>
+    </main>
+
+    <div class="modal-viewer" id="appViewer">
+        <div class="modal-header">
+            <h2 id="viewerTitle">App Viewer</h2>
+            <button class="close-btn" id="closeViewer">&times;</button>
+        </div>
+        <div class="modal-content">
+            <iframe class="viewer-frame" id="viewerFrame" sandbox="allow-scripts allow-same-origin"></iframe>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="sw.js"></script>
+</body>
+</html>
