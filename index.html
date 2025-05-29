@@ -7,65 +7,76 @@
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="ios-style.css">
-    <meta name="theme-color" content="#000000">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div class="ios-status-bar"></div>
+<body class="ios-theme">
+    <div class="ios-status-bar">
+        <img src="assets/status-bar.png" alt="Status Bar">
+    </div>
     
     <header class="ios-header">
         <div class="header-content">
             <div class="user-profile">
-                <img src="default-avatar.png" alt="Profile" id="profileImage">
+                <img src="assets/default-avatar.png" alt="Profile" id="profileImage">
             </div>
-            <h1>Apps</h1>
-            <div class="account-info" id="accountInfo">Sign In</div>
+            <div class="header-title">
+                <span class="greeting">Welcome,</span>
+                <h1>App Store</h1>
+            </div>
+            <div class="account-info" id="accountInfo">
+                <i class="fas fa-user-circle"></i>
+            </div>
         </div>
     </header>
     
-    <nav class="ios-nav">
-        <button class="nav-btn active" data-view="today">Today</button>
-        <button class="nav-btn" data-view="games">Games</button>
-        <button class="nav-btn" data-view="apps">Apps</button>
-        <button class="nav-btn" data-view="arcade">Arcade</button>
-        <button class="nav-btn" data-view="search">Search</button>
-    </nav>
-
     <main class="ios-main">
-        <!-- Today View -->
-        <section id="todayView" class="view-section active">
-            <div class="featured-card">
-                <div class="card-header">
-                    <span class="featured-label">FEATURED APP</span>
-                    <button class="get-btn">GET</button>
-                </div>
-                <div class="card-content">
-                    <!-- Dynamic content -->
-                </div>
+        <!-- Featured Section -->
+        <section class="featured-section" id="featuredSection">
+            <div class="section-header">
+                <h2>Featured</h2>
+                <a href="#" class="see-all">See All</a>
             </div>
-
-            <div class="add-app-card" id="addAppCard">
-                <div class="add-options">
-                    <button class="add-option" id="addWebsite">
-                        <i class="fas fa-globe"></i>
-                        <span>Add Website</span>
-                    </button>
-                    <button class="add-option" id="uploadApp">
-                        <i class="fas fa-upload"></i>
-                        <span>Upload App</span>
-                    </button>
-                    <button class="add-option" id="linkPwa">
-                        <i class="fas fa-link"></i>
-                        <span>Link PWA</span>
-                    </button>
+            <div class="featured-carousel">
+                <div class="featured-card">
+                    <img src="assets/featured-app-1.png" alt="Featured App" class="featured-image">
+                    <div class="featured-content">
+                        <span class="featured-tag">FEATURED</span>
+                        <h3>Amazing App</h3>
+                        <p>Discover something spectacular</p>
+                        <button class="get-button">GET</button>
+                    </div>
                 </div>
+                <!-- More featured cards -->
             </div>
         </section>
 
-        <!-- Apps Grid View -->
-        <section id="appsView" class="view-section">
+        <!-- Categories Section -->
+        <section class="categories-section">
             <div class="section-header">
-                <h2>All Apps</h2>
+                <h2>Categories</h2>
+            </div>
+            <div class="category-grid">
+                <div class="category-item">
+                    <div class="category-icon" style="background: linear-gradient(135deg, #FF6B6B, #FF8E8E);">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <span>Games</span>
+                </div>
+                <div class="category-item">
+                    <div class="category-icon" style="background: linear-gradient(135deg, #4ECDC4, #45B7AF);">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <span>Developer</span>
+                </div>
+                <!-- More categories -->
+            </div>
+        </section>
+
+        <!-- Apps Grid -->
+        <section class="apps-section">
+            <div class="section-header">
+                <h2>Your Apps</h2>
                 <div class="view-options">
                     <button class="view-option active" data-view="grid">
                         <i class="fas fa-th-large"></i>
@@ -75,65 +86,84 @@
                     </button>
                 </div>
             </div>
-            
             <div class="apps-grid" id="appsGrid">
-                <!-- Dynamic app content -->
-            </div>
-        </section>
-
-        <!-- Search View -->
-        <section id="searchView" class="view-section">
-            <div class="search-container">
-                <i class="fas fa-search search-icon"></i>
-                <input type="search" id="searchInput" placeholder="Search apps and websites">
-            </div>
-            <div class="search-results" id="searchResults">
-                <!-- Dynamic search results -->
+                <!-- Apps will be dynamically added here -->
             </div>
         </section>
     </main>
 
-    <!-- Modals -->
-    <div class="ios-modal" id="addWebsiteModal">
+    <!-- Bottom Navigation -->
+    <nav class="ios-nav">
+        <button class="nav-btn active" data-view="today">
+            <i class="fas fa-star"></i>
+            <span>Today</span>
+        </button>
+        <button class="nav-btn" data-view="games">
+            <i class="fas fa-gamepad"></i>
+            <span>Games</span>
+        </button>
+        <button class="nav-btn" data-view="apps">
+            <i class="fas fa-th-large"></i>
+            <span>Apps</span>
+        </button>
+        <button class="nav-btn" data-view="search">
+            <i class="fas fa-search"></i>
+            <span>Search</span>
+        </button>
+        <button class="nav-btn" data-view="updates">
+            <i class="fas fa-arrow-down"></i>
+            <span>Updates</span>
+        </button>
+    </nav>
+
+    <!-- Add App FAB -->
+    <button class="fab" id="addAppFab">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Add App Modal -->
+    <div class="ios-modal" id="addAppModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Add Website</h3>
-                <button class="close-modal">&times;</button>
+                <h3>Add New</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="websiteUrl">Website URL</label>
-                    <input type="url" id="websiteUrl" placeholder="https://example.com">
-                </div>
-                <div class="form-group">
-                    <label for="websiteName">Custom Name (Optional)</label>
-                    <input type="text" id="websiteName" placeholder="My Website">
-                </div>
-                <div class="icon-preview">
-                    <img id="websiteIconPreview" src="default-icon.png" alt="Website Icon">
-                </div>
-                <button class="ios-button" id="addWebsiteBtn">Add Website</button>
+            <div class="modal-options">
+                <button class="modal-option" id="addWebsite">
+                    <div class="option-icon" style="background: linear-gradient(135deg, #FF6B6B, #FF8E8E);">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="option-text">
+                        <h4>Add Website</h4>
+                        <p>Add any website as an app</p>
+                    </div>
+                </button>
+                <button class="modal-option" id="uploadApp">
+                    <div class="option-icon" style="background: linear-gradient(135deg, #4ECDC4, #45B7AF);">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <div class="option-text">
+                        <h4>Upload App</h4>
+                        <p>Upload your own PWA</p>
+                    </div>
+                </button>
+                <button class="modal-option" id="linkPwa">
+                    <div class="option-icon" style="background: linear-gradient(135deg, #A8E6CF, #90D4B6);">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <div class="option-text">
+                        <h4>Link PWA</h4>
+                        <p>Add existing PWA</p>
+                    </div>
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- App Details Modal -->
-    <div class="ios-modal" id="appDetailsModal">
-        <div class="modal-content app-details">
-            <!-- Dynamic app details content -->
-        </div>
-    </div>
-
-    <!-- Full Screen Container -->
-    <div id="fullscreenContainer" class="fullscreen-container">
-        <div class="fullscreen-header">
-            <button id="exitFullscreen" class="exit-fullscreen">
-                <i class="fas fa-times"></i>
-            </button>
-            <h3 id="fullscreenTitle"></h3>
-        </div>
-        <iframe id="fullscreenFrame" allowfullscreen></iframe>
-    </div>
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
 
     <script src="config.js"></script>
     <script src="utils.js"></script>
