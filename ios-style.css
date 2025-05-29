@@ -1,0 +1,246 @@
+:root {
+    --ios-background: #000000;
+    --ios-text-primary: #ffffff;
+    --ios-text-secondary: #8e8e93;
+    --ios-blue: #007aff;
+    --ios-card-background: #1c1c1e;
+    --ios-border-color: #38383a;
+    --ios-success: #30d158;
+    --ios-header-height: 44px;
+    --ios-nav-height: 49px;
+}
+
+/* iOS Status Bar */
+.ios-status-bar {
+    height: 20px;
+    background: var(--ios-background);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+/* iOS Header */
+.ios-header {
+    height: var(--ios-header-height);
+    background: var(--ios-background);
+    position: fixed;
+    top: 20px;
+    left: 0;
+    right: 0;
+    z-index: 900;
+    border-bottom: 0.5px solid var(--ios-border-color);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    height: 100%;
+}
+
+.header-content h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--ios-text-primary);
+}
+
+/* iOS Navigation */
+.ios-nav {
+    height: var(--ios-nav-height);
+    background: var(--ios-background);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 900;
+    display: flex;
+    justify-content: space-around;
+    border-top: 0.5px solid var(--ios-border-color);
+}
+
+.nav-btn {
+    color: var(--ios-text-secondary);
+    background: none;
+    border: none;
+    padding: 6px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 10px;
+    gap: 4px;
+}
+
+.nav-btn.active {
+    color: var(--ios-blue);
+}
+
+.nav-btn i {
+    font-size: 22px;
+}
+
+/* Main Content */
+.ios-main {
+    margin-top: calc(20px + var(--ios-header-height));
+    margin-bottom: var(--ios-nav-height);
+    background: var(--ios-background);
+    min-height: calc(100vh - var(--ios-header-height) - var(--ios-nav-height) - 20px);
+    padding: 16px;
+}
+
+/* Cards */
+.featured-card {
+    background: var(--ios-card-background);
+    border-radius: 16px;
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.featured-label {
+    color: var(--ios-text-secondary);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.get-btn {
+    background: var(--ios-blue);
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+/* App Grid */
+.apps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 16px;
+    padding: 16px;
+}
+
+.app-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.app-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    margin-bottom: 8px;
+    background: var(--ios-card-background);
+    overflow: hidden;
+}
+
+.app-name {
+    color: var(--ios-text-primary);
+    font-size: 12px;
+    margin: 0;
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Modals */
+.ios-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+.modal-content {
+    background: var(--ios-card-background);
+    border-radius: 16px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* Fullscreen */
+.fullscreen-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: white;
+    z-index: 2000;
+}
+
+.fullscreen-header {
+    height: 44px;
+    background: var(--ios-background);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    position: relative;
+}
+
+.exit-fullscreen {
+    background: none;
+    border: none;
+    color: var(--ios-text-primary);
+    font-size: 24px;
+    padding: 8px;
+    cursor: pointer;
+}
+
+#fullscreenFrame {
+    width: 100%;
+    height: calc(100% - 44px);
+    border: none;
+}
+
+/* Animations */
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.slide-up {
+    animation: slideUp 0.3s ease-out;
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
